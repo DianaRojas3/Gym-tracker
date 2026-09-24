@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>Plano</title>
-
-css/main.css
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano</title>
+    <link rel="stylesheet" href="css/main.css">
 </head>
-
 <body>
+    <header>
+        <div id="welcome"></div>
 
-<header>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="historial.html">Historial</a>
+            <a href="objetivos.html">Objetivos</a>
+        </nav>
+    </header>
 
-<h2 id="welcome"></h2>
+    <div id="gym"></div>
 
-historial.html
-Historial
-</a>
+    <div id="modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2 id="machineTitle"></h2>
 
-|
+            <input id="peso" type="number" placeholder="Peso (kg)">
+            <input id="series" type="number" placeholder="Series">
+            <input id="reps" type="number" placeholder="Repeticiones">
+            <textarea id="notes" placeholder="Notas"></textarea>
 
-objetivos.html
-Objetivos
-</a>
+            <button type="button" onclick="saveCurrentWorkout()">Guardar</button>
+            <button type="button" onclick="closeModal()">Cerrar</button>
 
-</header>
+            <div id="history"></div>
+        </div>
+    </div>
 
-<div id="gym"></div>
-
-js/data.jsscript>
-js/plano.jsscript>
-
+    <script src="js/machines.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/plano.js"></script>
 </body>
-
 </html>

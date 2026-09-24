@@ -1,335 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gym Tracker Diana</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f5f5f5;
-}
-
-header {
-    background: #6a5acd;
-    color: white;
-    padding: 15px;
-    text-align: center;
-}
-
-.controls {
-    padding: 15px;
-    text-align: center;
-}
-
-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 8px;
-    background: #6a5acd;
-    color: white;
-    cursor: pointer;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-
-.gym {
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
-    gap: 15px;
-    padding: 20px;
-}
-
-.machine {
-    background: white;
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-.machine:hover {
-    transform: scale(1.03);
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-}
-
-.modal-content {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    margin: 50px auto;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-}
-
-.history {
-    margin-top: 20px;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.record {
-    border-bottom: 1px solid #ddd;
-    padding: 5px;
-}
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Tracker</title>
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+    <header style="padding:20px">
+        <h1>🏋️ Gym Tracker</h1>
+    </header>
 
-<header>
-<h1>🏋️ Gym Tracker</h1>
-<p>Seguimiento de entrenamientos</p>
-</header>
-
-<div class="controls">
-<button onclick="addMachine()">➕ Añadir Máquina</button>
-</div>
-
-<div id="gym" class="gym"></div>
-
-<div id="modal" class="modal">
-    <div class="modal-content">
-
-        <h2 id="machineTitle"></h2>
-
-        <select id="type">
-            <option value="fuerza">Fuerza</option>
-            <option value="cardio">Cardio</option>
+    <main style="padding:20px; max-width:320px;">
+        <label for="userSelector">Perfil:</label>
+        <select id="userSelector" style="display:block; margin:10px 0; width:100%;">
+            <option value="didi">Didi</option>
+            <option value="jari">Jari</option>
         </select>
 
-        <div id="fuerzaFields">
-
-            <label>Peso (kg)</label>
-            <input id="peso" type="number">
-
-            <label>Series</label>
-            <input id="series" type="number">
-
-            <label>Repeticiones</label>
-            <input id="reps" type="number">
-
-        </div>
-
-        <div id="cardioFields" style="display:none;">
-
-            <label>Tiempo (min)</label>
-            <input id="tiempo" type="number">
-
-            <label>Distancia (km)</label>
-            <input id="distancia" type="number">
-
-        </div>
-
-        <button onclick="saveWorkout()">Guardar</button>
-        <button onclick="closeModal()">Cerrar</button>
-
-        <div id="history" class="history"></div>
-
-    </div>
-</div>
-
-<script>
-
-let machines =
-JSON.parse(localStorage.getItem("machines")) || [
-    "Hip Thrust",
-    "Prensa",
-    "Abductores",
-    "Jalón",
-    "Remo",
-    "Cinta"
-];
-
-let currentMachine = null;
-
-function saveMachines() {
-    localStorage.setItem("machines", JSON.stringify(machines));
-}
-
-function renderMachines() {
-
-    const gym = document.getElementById("gym");
-    gym.innerHTML = "";
-
-    machines.forEach(machine => {
-
-        const div = document.createElement("div");
-
-        div.className = "machine";
-        div.innerHTML = `<h3>${machine}</h3>`;
-
-        div.onclick = () => openMachine(machine);
-
-        gym.appendChild(div);
-
-    });
-
-}
-
-function addMachine() {
-
-    const name = prompt("Nombre de la máquina:");
-
-    if(!name) return;
-
-    machines.push(name);
-
-    saveMachines();
-
-    renderMachines();
-
-}
-
-function openMachine(machine) {
-
-    currentMachine = machine;
-
-    document.getElementById("machineTitle").innerText = machine;
-
-    document.getElementById("modal").style.display = "block";
-
-    loadHistory();
-
-}
-
-document.getElementById("type")
-.addEventListener("change", function() {
-
-    if(this.value === "cardio") {
-
-        document.getElementById("cardioFields").style.display="block";
-        document.getElementById("fuerzaFields").style.display="none";
-
-    } else {
-
-        document.getElementById("cardioFields").style.display="none";
-        document.getElementById("fuerzaFields").style.display="block";
-
-    }
-
-});
-
-function saveWorkout() {
-
-    let data =
-    JSON.parse(localStorage.getItem(currentMachine)) || [];
-
-    const type = document.getElementById("type").value;
-
-    const record = {
-
-        fecha: new Date().toLocaleDateString(),
-        tipo: type
-
-    };
-
-    if(type === "fuerza") {
-
-        record.peso =
-        document.getElementById("peso").value;
-
-        record.series =
-        document.getElementById("series").value;
-
-        record.reps =
-        document.getElementById("reps").value;
-
-    }
-
-    if(type === "cardio") {
-
-        record.tiempo =
-        document.getElementById("tiempo").value;
-
-        record.distancia =
-        document.getElementById("distancia").value;
-
-    }
-
-    data.push(record);
-
-    localStorage.setItem(
-        currentMachine,
-        JSON.stringify(data)
-    );
-
-    loadHistory();
-
-    alert("Entrenamiento guardado");
-
-}
-
-function loadHistory() {
-
-    const history =
-    document.getElementById("history");
-
-    history.innerHTML = "";
-
-    let data =
-    JSON.parse(localStorage.getItem(currentMachine)) || [];
-
-    data.reverse().forEach(r => {
-
-        const div = document.createElement("div");
-
-        div.className = "record";
-
-        if(r.tipo === "fuerza") {
-
-            div.innerHTML =
-            `
-            <b>${r.fecha}</b><br>
-            ${r.peso} kg |
-            ${r.series} series |
-            ${r.reps} reps
-            `;
-
-        } else {
-
-            div.innerHTML =
-            `
-            <b>${r.fecha}</b><br>
-            ${r.tiempo} min |
-            ${r.distancia} km
-            `;
-
+        <button id="loginBtn" type="button">Entrar</button>
+    </main>
+
+    <script src="js/storage.js"></script>
+    <script>
+        const selector = document.getElementById("userSelector");
+        const savedUser = localStorage.getItem("currentUser");
+
+        if (savedUser) {
+            selector.value = savedUser;
         }
 
-        history.appendChild(div);
-
-    });
-
-}
-
-function closeModal() {
-
-    document.getElementById("modal").style.display = "none";
-
-}
-
-renderMachines();
-
-</script>
-
+        document.getElementById("loginBtn").addEventListener("click", () => {
+            const user = selector.value;
+            setCurrentUser(user);
+            window.location.href = "plano.html";
+        });
+    </script>
 </body>
 </html>
