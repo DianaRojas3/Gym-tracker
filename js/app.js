@@ -1,14 +1,36 @@
 const gym = document.getElementById("gym");
 
+console.log(MACHINES);
+
 let selectedMachine = null;
 
 renderMachines();
 
+function getWeights(machineId) {
+
+    const data =
+        MACHINE_WEIGHTS[String(machineId)];
+
+    if (data) {
+        return data;
+    }
+
+    return {
+        didi: "",
+        jari: ""
+    };
+
+}
+
 function renderMachines() {
+
+    console.log("Renderizando");
 
     gym.innerHTML = "";
 
     MACHINES.forEach(machine => {
+
+        console.log(machine);
 
         const div = document.createElement("div");
 
@@ -17,70 +39,138 @@ function renderMachines() {
         div.style.left = machine.x + "px";
         div.style.top = machine.y + "px";
 
+
         const weights = getWeights(machine.id);
 
-        const machineNumber =
-            machine.id === 81
-            ? "8.1"
-            : machine.id;
+        console.log(
+            "ID:",
+            machine.id,
+            "PESOS:",
+            weights
+        );
 
-        div.innerHTML = `
-            <b>${machineNumber}</b>
-            <br>
-            ${machine.nombre}
-            <br>
-            D: ${weights.didi || "-"}
-            <br>
-            J: ${weights.jari || "-"}
-        `;
-
-        div.onclick = () => openMachine(machine);
+        div.innerHTML =
+            "<b>" +
+            machine.id +
+            "</b><br>" +
+            machine.nombre +
+            "<br><b>" +
+            (weights.didi || "-") +
+            " kg</b>";
 
         gym.appendChild(div);
 
+
+        
+
     });
+
 }
 
 function openMachine(machine) {
 
     selectedMachine = machine;
 
-    document.getElementById("machineTitle").innerText =
+    document.getElementById(
+        "machineTitle"
+    ).innerText =
         machine.nombre;
 
     const weights =
         getWeights(machine.id);
 
-    document.getElementById("pesoDidi").value =
+    document.getElementById(
+        "pesoDidi"
+    ).value =
         weights.didi || "";
 
-    document.getElementById("pesoJari").value =
+    document.getElementById(
+        "pesoJari"
+    ).value =
         weights.jari || "";
 
-    document.getElementById("modal").style.display =
+    document.getElementById(
+        "modal"
+    ).style.display =
         "block";
+
 }
 
-document.getElementById("saveBtn")
-.addEventListener("click", () => {
+function saveWeights(
+    machineId,
+    didiWeight,
+    jariWeight
+) {
 
-    saveWeights(
-        selectedMachine.id,
-        document.getElementById("pesoDidi").value,
-        document.getElementById("pesoJari").value
+    MACHINE_WEIGHTS[machineId] = {
+
+        didi:
+            parseFloat(didiWeight),
+
+        jari:
+            parseFloat(jariWeight)
+
+    };
+
+    localStorage.setItem(
+        "machineWeights",
+        JSON.stringify(MACHINE_WEIGHTS)
     );
 
-    document.getElementById("modal").style.display =
-        "none";
+}
+
+document
+    .getElementById("saveBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            saveWeights(
+                selectedMachine.id,
+                document.getElementById(
+                    "pesoDidi"
+                ).value,
+                document.getElementById(
+                    "pesoJari"
+                ).value
+            );
+
+            document.getElementById(
+                "modal"
+            ).style.display =
+                "none";
+
+            renderMachines();
+
+        }
+    );
+
+document
+    .getElementById("closeBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            document.getElementById(
+                "modal"
+            ).style.display =
+                "none";
+
+        }
+    );
+
+const savedWeights =
+    localStorage.getItem(
+        "machineWeights"
+    );
+
+if (savedWeights) {
+
+    Object.assign(
+        MACHINE_WEIGHTS,
+        JSON.parse(savedWeights)
+    );
 
     renderMachines();
 
-});
-
-document.getElementById("closeBtn")
-.addEventListener("click", () => {
-
-    document.getElementById("modal").style.display =
-        "none";
-
-});
+}

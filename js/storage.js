@@ -61,3 +61,38 @@ function getLastWorkout(machineId) {
     ];
 
 }
+function getWeights(machineId) {
+
+    const stored =
+        localStorage.getItem(
+            "weights_" + machineId
+        );
+
+    if (stored) {
+
+        return JSON.parse(stored);
+
+    }
+
+    return MACHINE_WEIGHTS[machineId] || {
+        didi: "",
+        jari: ""
+    };
+
+}
+
+function saveWeights(
+    machineId,
+    didi,
+    jari
+) {
+
+    localStorage.setItem(
+        "weights_" + machineId,
+        JSON.stringify({
+            didi,
+            jari
+        })
+    );
+
+}
