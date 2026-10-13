@@ -1,165 +1,86 @@
-const gym =
-document.getElementById("gym");
-
-const selector =
-document.getElementById(
-    "userSelector"
-);
-
-selector.value =
-getCurrentUser();
-
-selector.addEventListener(
-"change",
-function(){
-
-    setCurrentUser(
-        this.value
-    );
-
-    location.reload();
-
-}
-);
+const gym = document.getElementById("gym");
 
 let selectedMachine = null;
 
 renderMachines();
 
-function renderMachines(){
+function renderMachines() {
 
     gym.innerHTML = "";
 
     MACHINES.forEach(machine => {
 
-        const div =
-        document.createElement("div");
+        const div = document.createElement("div");
 
-        div.className =
-        "machine";
+        div.className = "machine";
 
-        div.style.left =
-        machine.x + "px";
+        div.style.left = machine.x + "px";
+        div.style.top = machine.y + "px";
 
-        div.style.top =
-        machine.y + "px";
+        const weights = getWeights(machine.id);
 
-        let machineNumber =
-        machine.id === 81
-        ? "8.1"
-        : machine.id;
-
-        const currentUser =
-        getCurrentUser();
-
-        const currentWeight =
-        MACHINE_WEIGHTS[machine.id]?.[
-            currentUser
-        ];
+        const machineNumber =
+            machine.id === 81
+            ? "8.1"
+            : machine.id;
 
         div.innerHTML = `
             <b>${machineNumber}</b>
             <br>
             ${machine.nombre}
             <br>
-            <b>${currentWeight ?? "-" } kg</b>
+            D: ${weights.didi || "-"}
+            <br>
+            J: ${weights.jari || "-"}
         `;
 
-        div.onclick =
-        () => openMachine(machine);
+        div.onclick = () => openMachine(machine);
 
         gym.appendChild(div);
 
     });
-
 }
 
-function openMachine(machine){
+function openMachine(machine) {
 
-    selectedMachine =
-    machine;
+    selectedMachine = machine;
 
-    document.getElementById(
-        "machineTitle"
-    ).innerText =
-    machine.nombre;
+    document.getElementById("machineTitle").innerText =
+        machine.nombre;
 
-    const currentUser =
-        getCurrentUser();
+    const weights =
+        getWeights(machine.id);
 
-    const defaultWeight =
-        MACHINE_WEIGHTS[machine.id]?.[
-            currentUser
-        ];
+    document.getElementById("pesoDidi").value =
+        weights.didi || "";
 
-    const last =
-        getLastWorkout(
-            machine.id
-        );
+    document.getElementById("pesoJari").value =
+        weights.jari || "";
 
-    if(last){
-
-        document.getElementById(
-            "peso"
-        ).value =
-        last.peso;
-
-        document.getElementById(
-            "notas"
-        ).value =
-        last.notas || "";
-
-    }
-    else{
-
-        document.getElementById(
-            "peso"
-        ).value =
-        defaultWeight || "";
-
-        document.getElementById(
-            "notas"
-        ).value =
-        "";
-
-    }
-
-    renderHistory();
-
-    document.getElementById(
-        "modal"
-    ).style.display =
+    document.getElementById("modal").style.display =
         "block";
-
 }
 
-function renderHistory(){
+document.getElementById("saveBtn")
+.addEventListener("click", () => {
 
-    const history =
-    getMachineHistory(
-        selectedMachine.id
+    saveWeights(
+        selectedMachine.id,
+        document.getElementById("pesoDidi").value,
+        document.getElementById("pesoJari").value
     );
 
-    document.getElementById(
-        "history"
-    ).innerHTML =
+    document.getElementById("modal").style.display =
+        "none";
 
-    "<h3>Histórico</h3>" +
+    renderMachines();
 
-    history
-    .slice()
-    .reverse()
-    .map(h => `
-        <p>
-            ${h.fecha}
-            <br>
-            ${h.peso} kg
-        </p>
-    `)
-    .join("");
+});
 
-}
+document.getElementById("closeBtn")
+.addEventListener("click", () => {
 
-document
-.getElementById("saveBtn")
-.
+    document.getElementById("modal").style.display =
+        "none";
+
+});
