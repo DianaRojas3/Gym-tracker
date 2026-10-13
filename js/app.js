@@ -17,43 +17,62 @@ function(){
         this.value
     );
 
+    location.reload();
+
 }
 );
 
 let selectedMachine = null;
 
-MACHINES.forEach(machine => {
+renderMachines();
 
-    const div =
-    document.createElement("div");
+function renderMachines(){
 
-    div.className =
-    "machine";
+    gym.innerHTML = "";
 
-    div.style.left =
-    machine.x + "px";
+    MACHINES.forEach(machine => {
 
-    div.style.top =
-    machine.y + "px";
+        const div =
+        document.createElement("div");
 
-    let machineNumber =
-    machine.id === 81
-    ? "8.1"
-    : machine.id;
+        div.className =
+        "machine";
 
-    div.innerHTML =
-    `
-    <b>${machineNumber}</b>
-    <br>
-    ${machine.nombre}
-    `;
+        div.style.left =
+        machine.x + "px";
 
-    div.onclick =
-    () => openMachine(machine);
+        div.style.top =
+        machine.y + "px";
 
-    gym.appendChild(div);
+        let machineNumber =
+        machine.id === 81
+        ? "8.1"
+        : machine.id;
 
-});
+        const currentUser =
+        getCurrentUser();
+
+        const currentWeight =
+        MACHINE_WEIGHTS[machine.id]?.[
+            currentUser
+        ];
+
+        div.innerHTML = `
+            <b>${machineNumber}</b>
+            <br>
+            ${machine.nombre}
+            <br>
+            <b>${currentWeight ?? "-" } kg</b>
+        `;
+
+        div.onclick =
+        () => openMachine(machine);
+
+        gym.appendChild(div);
+
+    });
+
+}
 
 function openMachine(machine){
 
@@ -65,32 +84,43 @@ function openMachine(machine){
     ).innerText =
     machine.nombre;
 
+    const currentUser =
+        getCurrentUser();
+
+    const defaultWeight =
+        MACHINE_WEIGHTS[machine.id]?.[
+            currentUser
+        ];
+
     const last =
-    getLastWorkout(
-        machine.id
-    );
+        getLastWorkout(
+            machine.id
+        );
 
     if(last){
 
         document.getElementById(
             "peso"
         ).value =
-        last.peso || "";
-
-        document.getElementById(
-            "series"
-        ).value =
-        last.series || "";
-
-        document.getElementById(
-            "reps"
-        ).value =
-        last.reps || "";
+        last.peso;
 
         document.getElementById(
             "notas"
         ).value =
         last.notas || "";
+
+    }
+    else{
+
+        document.getElementById(
+            "peso"
+        ).value =
+        defaultWeight || "";
+
+        document.getElementById(
+            "notas"
+        ).value =
+        "";
 
     }
 
@@ -99,7 +129,8 @@ function openMachine(machine){
     document.getElementById(
         "modal"
     ).style.display =
-    "block";
+        "block";
+
 }
 
 function renderHistory(){
@@ -112,71 +143,23 @@ function renderHistory(){
     document.getElementById(
         "history"
     ).innerHTML =
+
+    "<h3>Histórico</h3>" +
+
     history
     .slice()
     .reverse()
     .map(h => `
         <p>
-        ${h.fecha}<br>
-        ${h.peso} kg |
-        ${h.series} x ${h.reps}
+            ${h.fecha}
+            <br>
+            ${h.peso} kg
         </p>
     `)
     .join("");
+
 }
 
 document
 .getElementById("saveBtn")
-.addEventListener(
-"click",
-function(){
-
-    saveWorkout(
-        selectedMachine.id,
-        {
-            fecha:
-            new Date()
-            .toLocaleDateString(),
-
-            peso:
-            document
-            .getElementById("peso")
-            .value,
-
-            series:
-            document
-            .getElementById("series")
-            .value,
-
-            reps:
-            document
-            .getElementById("reps")
-            .value,
-
-            notas:
-            document
-            .getElementById("notas")
-            .value
-        }
-    );
-
-    renderHistory();
-
-    alert(
-        "Entrenamiento guardado"
-    );
-
-});
-
-document
-.getElementById("closeBtn")
-.addEventListener(
-"click",
-function(){
-
-    document
-    .getElementById("modal")
-    .style.display =
-    "none";
-
-});
+.

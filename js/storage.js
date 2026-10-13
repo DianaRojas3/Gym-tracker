@@ -1,9 +1,8 @@
 function getCurrentUser() {
 
-    return (
-        localStorage.getItem("currentUser")
-        || "didi"
-    );
+    return localStorage.getItem(
+        "currentUser"
+    ) || "didi";
 
 }
 
@@ -53,10 +52,8 @@ function getLastWorkout(machineId) {
     const history =
         getMachineHistory(machineId);
 
-    if(history.length === 0){
-
+    if (history.length === 0) {
         return null;
-
     }
 
     return history[
