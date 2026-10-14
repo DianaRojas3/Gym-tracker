@@ -77,10 +77,10 @@ const MACHINES = [
 
     { id: 37, nombre: "Rotación torso", x: 1320, y: 1050 },
 
-    { id: 38, nombre: "Levantamiento de piernas", x: 1400, y: 650 },
+    { id: 38, nombre: "Levantamiento de piernas", x: 1370, y: 650 },
 
-    { id: 39, nombre: "Fondos / Dominadas", x: 1400, y: 450 },
+    { id: 39, nombre: "Fondos / Dominadas", x: 1370, y: 450 },
 
-    { id: 40, nombre: "Multifunción", x: 1400, y: 250 }
+    { id: 40, nombre: "Multifunción", x: 1370, y: 250 }
 
 ];

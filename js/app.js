@@ -4,6 +4,7 @@ console.log(MACHINES);
 
 let selectedMachine = null;
 
+
 renderMachines();
 
 function getWeights(machineId) {
@@ -37,7 +38,7 @@ function renderMachines() {
         div.className = "machine";
 
         div.style.left = machine.x + "px";
-        div.style.top = machine.y + "px";
+        div.style.top = (machine.y + 80) + "px";
 
 
         const weights = getWeights(machine.id);

@@ -17,7 +17,7 @@ body {
 /* CABECERA */
 
 header {
-    background: #6a5acd;
+    background: #8b7cf6;
     color: white;
     padding: 20px;
 }
@@ -55,9 +55,9 @@ header select {
 
     position: relative;
 
-    width: 1800px;
+    width: 1500px;
 
-    height: 1400px;
+    height: 1200px;
 
     margin: 20px auto;
 
@@ -74,41 +74,44 @@ header select {
 
     position: absolute;
 
-    width: 170px;
+    width: 110px;
 
-    min-height: 90px;
+    min-height: 55px;
 
-    background: #6a5acd;
+    background: #9b8cff;
 
     color: white;
 
-    padding: 10px;
+    padding: 6px;
 
-    border-radius: 10px;
+    border-radius: 12px;
 
     text-align: center;
 
     cursor: pointer;
 
-    transition: transform .2s;
+    transition: all .2s ease;
 
-    font-size: 12px;
+    font-size: 11px;
 
-    line-height: 1.4;
+    line-height: 1;
 
     overflow-wrap: break-word;
 
-    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    box-shadow:
+        0 3px 8px rgba(0,0,0,.12);
 }
+
 
 .machine:hover {
 
     transform: scale(1.05);
 
-    background: #5848c2;
+    background: #8a78ff;
 
     z-index: 999;
-} 
+}
+
 
 /* LOGIN ANTIGUO (por compatibilidad) */
 
@@ -152,7 +155,7 @@ button {
 
 button {
 
-    background: #6a5acd;
+    background: #8b7cf6;
 
     color: white;
 
@@ -206,4 +209,14 @@ button:hover {
 #history hr {
 
     margin: 10px 0;
+}
+
+
+.machine b {
+
+    display: block;
+
+    font-size: 13px;
+
+    margin-bottom: 2px;
 }
