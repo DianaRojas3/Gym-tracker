@@ -4,13 +4,26 @@ console.log(MACHINES);
 
 let selectedMachine = null;
 
+const selector =
+    document.getElementById(
+        "userSelector"
+    );
+
+selector.addEventListener(
+    "change",
+    () => {
+
+        renderMachines();
+
+    }
+);
 
 renderMachines();
 
 function getWeights(machineId) {
 
     const data =
-        MACHINE_WEIGHTS[String(machineId)];
+        MACHINE_WEIGHTS[machineId];
 
     if (data) {
         return data;
@@ -29,40 +42,47 @@ function renderMachines() {
 
     gym.innerHTML = "";
 
+    const currentUser =
+        selector.value;
+
     MACHINES.forEach(machine => {
 
-        console.log(machine);
+        const div =
+            document.createElement("div");
 
-        const div = document.createElement("div");
+        div.className =
+            "machine";
 
-        div.className = "machine";
+        div.style.left =
+            machine.x + "px";
 
-        div.style.left = machine.x + "px";
-        div.style.top = (machine.y + 80) + "px";
+        div.style.top =
+            (machine.y + 80) + "px";
 
+        const weights =
+            getWeights(machine.id);
 
-        const weights = getWeights(machine.id);
+        const currentWeight =
+            weights[currentUser];
 
-        console.log(
-            "ID:",
-            machine.id,
-            "PESOS:",
-            weights
-        );
+        const machineNumber =
+            machine.id === 81
+            ? "8.1"
+            : machine.id;
 
         div.innerHTML =
             "<b>" +
-            machine.id +
+            machineNumber +
             "</b><br>" +
             machine.nombre +
             "<br><b>" +
-            (weights.didi || "-") +
+            (currentWeight || "-") +
             " kg</b>";
 
+        div.onclick =
+            () => openMachine(machine);
+
         gym.appendChild(div);
-
-
-        
 
     });
 
